@@ -7,9 +7,11 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import { useNavigate } from 'react-router-dom';
 import FormLabel from '@mui/material/FormLabel';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from "../../api/axios";
 import Button from "@mui/material/Button";
 import Toast from "../components/Toast";
@@ -21,9 +23,15 @@ const CreateTestPage = () => {
   const [nextSlide, setNextSilde] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [type, setType] = useState();
+  const [Title, setTitle] = useState();
+  const [PassPercent, setPassPercent] = useState();
+  const [Duration, setDuration] = useState();
+  const [Questions, setQuestions] = useState([]);
   const title = useRef();
   const paspercent = useRef();
+  const [loading, setLoading] = useState(false);
   const duration = useRef();
+  const navigate = useNavigate();
 
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
@@ -40,6 +48,11 @@ const CreateTestPage = () => {
     setTimeout(() => {
       <Toast>File Uploaded Successfully</Toast>
     }, 3000);
+  }
+
+  if(loading) {
+    return <div className="w-full h-screen bg-purple-200 flex justify-center items-center"><CircularProgress color="secondary" 
+    size={80}/></div> ;
   }
 
   const QuestionHandler = (ev) => {
@@ -80,6 +93,8 @@ const CreateTestPage = () => {
     console.log(formData);
     console.log(formData1);
 
+    setLoading(true);
+
     const response = await axios.post(OCR, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -92,11 +107,16 @@ const CreateTestPage = () => {
       },
     });
 
+    setQuestions(response?.data?.data);
+
+    setLoading(false);
+    navigate("/assessment")
+   
     console.log(response?.data?.data);
     console.log(responses?.data?.data);
-
+    
     handleSubmit();
-  };
+  }
 
   return (
     <div className="flex flex-row items-center justify-center w-full bg-purple-200 min-h-[87vh]">
@@ -120,6 +140,8 @@ const CreateTestPage = () => {
                 id="outlined-basic"
                 color="secondary"
                 label="Test Title"
+                value={Title}
+                onChange={(e) => setTitle(e.target.value)}
                 fullWidth
                 variant="filled"
                 inputRef={title}
@@ -134,9 +156,11 @@ const CreateTestPage = () => {
                 sx={{ margin: "0px 30px", width: "100%" }}
                 id="outlined-basic"
                 color="secondary"
+                value={PassPercent}
                 label="Pass Percentage"
                 fullWidth
                 variant="filled"
+                onChange={(e) => setPassPercent(e.target.value)}
                 inputRef={paspercent}
               />
 
@@ -151,6 +175,8 @@ const CreateTestPage = () => {
                 id="outlined-basic"
                 color="secondary"
                 label="Duration"
+                value={Duration}
+                onCanPlay={(e) => setDuration(e.target.value)}
                 fullWidth
                 variant="filled"
                 inputRef={duration}
@@ -170,7 +196,7 @@ const CreateTestPage = () => {
             </FormControl>
             <Button
               className="gradient"
-              sx={{color: "white", width: "400px", height: "50px", margin: "25px 0px", display: "flex", gap:"10px"}}
+              sx={{color: "white", width: "400px", height: "50px", margin: "25px 0px", display: "flex", gap:"20px"}}
               variant="filled"
               onClick={onNext}
             >
@@ -256,6 +282,6 @@ const CreateTestPage = () => {
       )}
     </div>
   );
-};
+}
 
 export default CreateTestPage;

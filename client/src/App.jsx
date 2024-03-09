@@ -4,6 +4,7 @@ import { LandingPage } from "./pages/landingpage";
 import { Layout } from "./Layout/frame";
 import { Manual } from "./pages/manualsetup";
 import CreateTestPage from "./pages/CreateTestPage";
+import { Test } from "./pages/displaytext";
 import AssessmentPage from "./pages/AssessmentPage";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/create" element={<CreateTestPage />} />
           <Route path="/custom" element={<Manual />} />
           <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/test" element={<Test />} />
         </Route>
       </Routes>
     </BrowserRouter>

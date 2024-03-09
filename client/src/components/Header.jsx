@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { Link } from "react-router-dom";
 
 const pages = [];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -43,6 +44,7 @@ function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <Link to="/">
           <Typography
             variant="h6"
             noWrap
@@ -60,7 +62,7 @@ function Header() {
           >
             ExamEase
           </Typography>
-
+            </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"

@@ -9,6 +9,12 @@ import axios from "axios";
 import { ocrSpace } from "ocr-space-api-wrapper";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import OpenAI from "openai";
+import {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} from "@google/generative-ai";
 
 const UploadMiddleware = multer({ dest: "uploads/" });
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +22,12 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
+
+// Replace with your actual API key (get one from Google AI Studio)
+const API_KEY = process.env.GEMINI;
+
+// Specify the model name (e.g., "gemini-pro")
+const MODEL_NAME = "gemini-pro";
 
 app.use(
   cors({
@@ -26,7 +38,6 @@ app.use(
 );
 
 app.use(express.json());
-
 app.get("/", async (req, res) => {
   try {
     const booksInfo = await pool.query("SELECT * FROM books WHERE id=$1", [1]);
@@ -51,38 +62,52 @@ app.post("/upload", UploadMiddleware.single("pdfFile"), async (req, res) => {
 
       const imgPath = newPath;
       console.log("Hello", imgPath);
-      const apiKey = "K86519444388957";
 
       try {
-        const apiResponse = await ocrSpace(imgPath, {
-          apiKey: "K86519444388957",
+        const res2 = await ocrSpace(imgPath, {
+          apiKey: process.env.OCR,
         });
 
-        const parsedResults = JSON.stringify(apiResponse.ParsedResults);
-        let questions = [];
-        let options = [];
-        const parsedText = JSON.parse(parsedResults);
-        // Extract questions from ParsedText
-        console.log(parsedText[0].ParsedText);
-        const questionMatches = parsedText[0].ParsedText.match(
-          /(\d+\.\s.*?)(?=\d+\.\s|$)/g
-        );
-        if (questionMatches) {
-          questions = questions.concat(questionMatches);
-        }
+        let Strings;
 
-        // Extract options from ParsedText
-        const optionMatches = parsedText[0].ParsedText.match(
-          /[A-D]\.\s(.*?)(?=[A-D]\.\s|$)/g
-        );
-        if (optionMatches) {
-          options = options.concat(optionMatches);
-        }
+        res2.ParsedResults.map((t) => {
+          Strings += t.ParsedText;
+        });
 
-        // Log the generated arrays
-        console.log("Questions:", questions);
-        console.log("Options:", options);
-        res.status(200).json({ data: apiResponse });
+        console.log(Strings);
+
+        const prompt = `${JSON.stringify(
+          Strings.substring(0, 1800)
+        )} Convert OCR API text to JSON with questions and options, excluding the code Give in Array Of Objects .`;
+
+        const generationConfig = {
+          temperature: 0.9, // Controls randomness (higher = more creative, but less coherent)
+          topK: 1, // Select top K most likely words at each step
+          topP: 1, // Filter out low probability continuations
+          maxOutputTokens: 2048, // Maximum number of tokens to generate
+        };
+
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({
+          model: MODEL_NAME,
+          generationConfig,
+        });
+
+        // Optional configuration for generation (adjust as needed)
+
+        try {
+          const result = await model.generateContent(prompt);
+          const response = await result.response; // Access generated text from the response (structure might differ)
+          console.log(response);
+          console.log("Generated text:", response.text());
+          res.status(200).json({
+            data: response.text(),
+            dataDup: Strings,
+          }); // Try different properties based on documentation
+        } catch (error) {
+          console.error("Error:", error);
+          res.status(400).json({ data: error });
+        }
       } catch (error) {
         console.error(error);
       }
