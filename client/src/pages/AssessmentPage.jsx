@@ -1,18 +1,23 @@
 import Pagination from '@mui/material/Pagination';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Options from '../components/Options';
-import { useQuestionContext } from '../QuestionsContext';
+import { QuestionContext } from '../QuestionsContext';
+import Timer from '../components/Timer';
+import Alert from '@mui/material/Alert';
+
 
 const AssessmentPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [clicked, setClicked] = useState(null);
-  const { questions } = useQuestionContext();
+  const { questions } = useContext(QuestionContext);
 
     console.log("Questions", questions);
+
 
     if(questions.length === 0) {
       return <div>Loading...</div>
     }
+  const duration = 1;
   const Questions = [
   {
     "question": "The direction in which the formal communication flows is always",
@@ -73,6 +78,11 @@ const AssessmentPage = () => {
     console.log(newPage);
     setCurrentPage(newPage);
   };
+  const handleTimerEnd = () => {
+    console.log('Timer has ended!'); 
+    //navigate to dashboard
+    return <Alert severity="error">Time is up!</Alert>
+  };
 
   return (
   <>
@@ -80,16 +90,19 @@ const AssessmentPage = () => {
       <div className="bg-purple-200 h-screen">
         <div className='text-2xl mx-24 py-4'>
           <span className='font-bold'>Question Number {currentPage}.</span><br/>
-          {questions[currentPage-1]?.question}
+          {Questions[currentPage-1]?.question}
+        </div>
+        <div className='absolute mx-24 right-10 top-20'>
+          <Timer initialMinutes={duration} onTimerEnd={handleTimerEnd}/>
         </div>
         <Options
-          options={questions[currentPage-1]?.options}
+          options={Questions[currentPage-1]?.options}
           clicked={clicked}
           setClicked={setClicked}
         />
         <div className='fixed bottom-4 left-1/2 -translate-x-1/2'>
           <Pagination 
-            count={questions?.length-1}
+            count={Questions?.length-1}
             size='large'
             page={currentPage}
             onChange={handlePageChange}

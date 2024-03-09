@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 
 // Create the context
-const QuestionContext = createContext();
+export const QuestionContext = createContext();
 
 // Create a context provider component
 export const QuestionProvider = ({ children }) => {
@@ -14,7 +14,3 @@ export const QuestionProvider = ({ children }) => {
   );
 };
 
-// Create a custom hook to use the context
-export const useQuestionContext = () => {
-  return useContext(QuestionContext);
-};

@@ -58,6 +58,7 @@ function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Link to={"/"} >
           <Typography
             variant="h6"
             noWrap
@@ -75,7 +76,7 @@ function Header() {
           >
             ExamEase
           </Typography>
-
+          </Link>
           <Box
             sx={{
               flexGrow: 1,

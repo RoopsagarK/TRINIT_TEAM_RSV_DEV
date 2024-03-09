@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Tooltip from '@mui/material/Tooltip';
+import {Link} from 'react-router-dom';
 
 export const Manual = () => {
   const [question, setQuestion] = useState([
@@ -162,7 +163,9 @@ export const Manual = () => {
           </div>
         </Tooltip>
         <div className="flex flex-row items-center justify-center text-purple-600">
-          <Button variant="outlined" color="secondary">Submit</Button>
+          <Link to="/assessment">
+            <Button variant="outlined" color="secondary">Submit</Button>
+          </Link>
         </div>
       </div>
     </div>

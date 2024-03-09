@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import "../css/CreateTestPage.css";
@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import axios from "../../api/axios";
 import Button from "@mui/material/Button";
 import Toast from "../components/Toast";
-import { useQuestionContext } from "../QuestionsContext";
+import { QuestionContext } from "../QuestionsContext";
 
 const OCR = "/upload";
 const OCR1 = "/upload1";
@@ -24,16 +24,16 @@ const CreateTestPage = () => {
   const [nextSlide, setNextSilde] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [type, setType] = useState();
-  const [Title, setTitle] = useState();
-  const [PassPercent, setPassPercent] = useState();
-  const [Duration, setDuration] = useState();
+  const [Title, setTitle] = useState(null);
+  const [PassPercent, setPassPercent] = useState(null);
+  const [Duration, setDuration] = useState(null);
   const title = useRef();
   const paspercent = useRef();
   const [loading, setLoading] = useState(false);
   const duration = useRef();
   const navigate = useNavigate();
 
-  const { setQuestions } = useQuestionContext();
+  const { setQuestions } = useContext(QuestionContext);
 
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
@@ -75,12 +75,8 @@ const CreateTestPage = () => {
     setType(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    console.log(title.current.value);
-    console.log(paspercent.current.value);
-    console.log(duration.current.value);
-    console.log(type);
+  const handleSubmit = () => {
+    console.log({ Title, PassPercent, Duration });
   };
 
   const UploadHandler = async (ev) => {
@@ -96,28 +92,32 @@ const CreateTestPage = () => {
     console.log(formData1);
 
     setLoading(true);
+    try {
+      const response = await axios.post(OCR, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    const response = await axios.post(OCR, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+      const responses = await axios.post(OCR1, formData1, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    const responses = await axios.post(OCR1, formData1, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+      setQuestions(response?.data?.data);
 
-    setQuestions(response?.data?.data);
+      setLoading(false);
+      navigate("/assessment")
+     
+      handleSubmit();
+      console.log(response?.data?.data);
+      console.log(responses?.data?.data);
+      
+    } catch (error) {
+      console.log(error);
+    }
 
-    setLoading(false);
-    navigate("/assessment")
-   
-    console.log(response?.data?.data);
-    console.log(responses?.data?.data);
-    
-    handleSubmit();
   }
 
   return (
@@ -131,7 +131,7 @@ const CreateTestPage = () => {
           </div>
           
           <div className="overflow-hidden">
-            <form action="">
+            <form>
               <Typography sx={{ m: 2 }}  
                 variant="h5"              
                 component="h2" gutterBottom>
@@ -146,6 +146,7 @@ const CreateTestPage = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 fullWidth
                 variant="filled"
+                required
                 inputRef={title}
               />
 
@@ -162,6 +163,7 @@ const CreateTestPage = () => {
                 label="Pass Percentage"
                 fullWidth
                 variant="filled"
+                required
                 onChange={(e) => setPassPercent(e.target.value)}
                 inputRef={paspercent}
               />
@@ -181,6 +183,7 @@ const CreateTestPage = () => {
                 onCanPlay={(e) => setDuration(e.target.value)}
                 fullWidth
                 variant="filled"
+                required
                 inputRef={duration}
               />
               <div className="grid grid-cols-2">
@@ -200,6 +203,7 @@ const CreateTestPage = () => {
               className="gradient"
               sx={{color: "white", width: "400px", height: "50px", margin: "25px 0px", display: "flex", gap:"20px"}}
               variant="filled"
+              type="submit"
               onClick={onNext}
             >
               Next <ArrowCircleRightIcon />
