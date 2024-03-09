@@ -10,7 +10,7 @@ const Options = ({ options, clicked, setClicked }) => {
 
     return (
         <div className={`mx-24 grid grid-cols-2 my-6 gap-3`}>
-            {options.map((option, index) => (
+            {options?.map((option, index) => (
                 <div
                     key={index}
                     onClick={() => handleClick(index)}

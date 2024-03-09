@@ -5,11 +5,15 @@ import { Layout } from "./Layout/frame";
 import { Manual } from "./pages/manualsetup";
 import CreateTestPage from "./pages/CreateTestPage";
 import { Test } from "./pages/displaytext";
+import { QuestionProvider } from "./QuestionsContext";
 import AssessmentPage from "./pages/AssessmentPage";
+import { Login } from "./pages/login";
+import { Register } from "./pages/register";
 
 function App() {
   return (
     <BrowserRouter>
+      <QuestionProvider>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<LandingPage />} />
@@ -17,8 +21,11 @@ function App() {
           <Route path="/custom" element={<Manual />} />
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Route>
       </Routes>
+      </QuestionProvider>
     </BrowserRouter>
   );
 }

@@ -15,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import axios from "../../api/axios";
 import Button from "@mui/material/Button";
 import Toast from "../components/Toast";
+import { useQuestionContext } from "../QuestionsContext";
 
 const OCR = "/upload";
 const OCR1 = "/upload1";
@@ -26,12 +27,13 @@ const CreateTestPage = () => {
   const [Title, setTitle] = useState();
   const [PassPercent, setPassPercent] = useState();
   const [Duration, setDuration] = useState();
-  const [Questions, setQuestions] = useState([]);
   const title = useRef();
   const paspercent = useRef();
   const [loading, setLoading] = useState(false);
   const duration = useRef();
   const navigate = useNavigate();
+
+  const { setQuestions } = useQuestionContext();
 
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();

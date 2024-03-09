@@ -1,10 +1,18 @@
 import Pagination from '@mui/material/Pagination';
 import { useState } from 'react';
 import Options from '../components/Options';
+import { useQuestionContext } from '../QuestionsContext';
 
 const AssessmentPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [clicked, setClicked] = useState(null);
+  const { questions } = useQuestionContext();
+
+    console.log("Questions", questions);
+
+    if(questions.length === 0) {
+      return <div>Loading...</div>
+    }
   const Questions = [
   {
     "question": "The direction in which the formal communication flows is always",
@@ -67,28 +75,32 @@ const AssessmentPage = () => {
   };
 
   return (
-    <div className="bg-purple-200 h-screen">
-      <div className='text-2xl mx-24 py-4'>
-        <span className='font-bold'>Question Number {currentPage}.</span><br/>
-        {Questions[currentPage-1].question}
+  <>
+    {questions.length !== 0 && (
+      <div className="bg-purple-200 h-screen">
+        <div className='text-2xl mx-24 py-4'>
+          <span className='font-bold'>Question Number {currentPage}.</span><br/>
+          {questions[currentPage-1]?.question}
+        </div>
+        <Options
+          options={questions[currentPage-1]?.options}
+          clicked={clicked}
+          setClicked={setClicked}
+        />
+        <div className='fixed bottom-4 left-1/2 -translate-x-1/2'>
+          <Pagination 
+            count={questions?.length-1}
+            size='large'
+            page={currentPage}
+            onChange={handlePageChange}
+            color='secondary'
+          />
+        </div>
       </div>
-      <Options
-        options={Questions[currentPage-1].options}
-        clicked={clicked}
-        setClicked={setClicked}
-      />
-      <div className='fixed bottom-4 left-1/2 -translate-x-1/2'>
-       <Pagination 
-        count={Questions.length-1}
-        size='large'
-        page={currentPage}
-        onChange={handlePageChange}
-        color='secondary'
-       />
-      </div>
-    </div>
+    )}
+  </>
+);
 
-  )
 }
 
 export default AssessmentPage

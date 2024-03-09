@@ -18,7 +18,7 @@ import {
 
 const UploadMiddleware = multer({ dest: "uploads/" });
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const _dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
@@ -102,7 +102,6 @@ app.post("/upload", UploadMiddleware.single("pdfFile"), async (req, res) => {
           console.log("Generated text:", response.text());
           res.status(200).json({
             data: response.text(),
-            dataDup: Strings,
           }); // Try different properties based on documentation
         } catch (error) {
           console.error("Error:", error);
@@ -133,6 +132,42 @@ app.post("/upload1", UploadMiddleware.single("pdfFile1"), async (req, res) => {
     } catch (error) {
       res.status(403).json({ data: error });
     }
+  }
+});
+
+app.post("/register", async (req, res) => {
+  console.log(req.body);
+  const { username, gmail, password } = req.body;
+  console.log(username, gmail, password);
+  const query = `
+    insert into users (username, email, password) values ($1, $2, $3)
+  `;
+  try {
+    await pool.query(query, [username, gmail, password]);
+    res.status(200).json({ data: "success" });
+  } catch (error) {
+    res.status(200).json({ data: error });
+  }
+});
+
+app.post("/login", async (req, res) => {
+  console.log(req.body);
+  const { gmail, passwords } = req.body;
+  const query = `
+    select * from users where email = $1
+  `;
+  try {
+    const User = await pool.query(query, [gmail]);
+    console.log(User);
+
+    const { username, email, password } = User.rows[0];
+
+    if (email === gmail && password === passwords)
+      res.status(200).json({ data: User.rows, status: true });
+    else res.status(200).json({ data: [], status: false });
+  } catch (error) {
+    console.log(error);
+    res.status(200).json({ data: error });
   }
 });
 
