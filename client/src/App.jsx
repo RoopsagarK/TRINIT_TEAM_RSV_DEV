@@ -9,11 +9,12 @@ import { QuestionProvider } from "./QuestionsContext";
 import AssessmentPage from "./pages/AssessmentPage";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
-
+import AnswerProvider from './AnwersContext'; 
 function App() {
   return (
     <BrowserRouter>
       <QuestionProvider>
+      <AnswerProvider>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<LandingPage />} />
@@ -25,6 +26,7 @@ function App() {
           <Route path="/register" element={<Register />} />
         </Route>
       </Routes>
+      </AnswerProvider>
       </QuestionProvider>
     </BrowserRouter>
   );

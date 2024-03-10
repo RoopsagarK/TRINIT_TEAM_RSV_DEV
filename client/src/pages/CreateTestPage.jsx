@@ -16,6 +16,7 @@ import axios from "../../api/axios";
 import Button from "@mui/material/Button";
 import Toast from "../components/Toast";
 import { QuestionContext } from "../QuestionsContext";
+import { AnswerContext } from "../AnwersContext";
 
 const OCR = "/upload";
 const OCR1 = "/upload1";
@@ -34,6 +35,7 @@ const CreateTestPage = () => {
   const navigate = useNavigate();
 
   const { setQuestions } = useContext(QuestionContext);
+  const { setAnswers } = useContext(AnswerContext);
 
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
@@ -99,20 +101,21 @@ const CreateTestPage = () => {
         },
       });
 
-      const responses = await axios.post(OCR1, formData1, {
+      const response1 = await axios.post(OCR1, formData1, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       setQuestions(response?.data?.data);
+      setAnswers(response1?.data?.data);
 
       setLoading(false);
       navigate("/assessment")
      
       handleSubmit();
       console.log(response?.data?.data);
-      console.log(responses?.data?.data);
+      console.log(response1?.data?.data);
       
     } catch (error) {
       console.log(error);
