@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const pages = [];
-const settings = ["Profile", "Account", "Dashboard"];
+const settings = ["Profile", "Account"];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -182,6 +182,12 @@ function Header() {
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
+                  <Link to={"/Dashboard"}>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">Dashboard</Typography>
+                    </MenuItem>
+                  </Link>
+
                   <MenuItem onClick={LogoutHandler}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>

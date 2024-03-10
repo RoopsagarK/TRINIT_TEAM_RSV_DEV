@@ -153,7 +153,7 @@ app.post("/upload1", UploadMiddleware.single("pdfFile1"), async (req, res) => {
           maxOutputTokens: 2048, // Maximum number of tokens to generate
         };
 
-        const genAI = new GoogleGenerativeAI(API_KEY);
+        const genAI = new GoogleGenerativeAI(API_KEY)
         const model = genAI.getGenerativeModel({
           model: MODEL_NAME,
           generationConfig,
