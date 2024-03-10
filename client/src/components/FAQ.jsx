@@ -49,16 +49,6 @@ export default function DisabledAccordion() {
               </Accordion>
           </div>
           ))}
-      
-      <Accordion disabled>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3-content"
-          id="panel3-header"
-        >
-          <Typography>Disabled Accordion</Typography>
-        </AccordionSummary>
-      </Accordion>
     </div>
   );
 }
