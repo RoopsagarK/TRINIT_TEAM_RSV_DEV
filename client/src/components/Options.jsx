@@ -27,14 +27,14 @@ const Options = ({ options, clicked, setClicked }) => {
                 </div>
             ))}
             {/* Display selected options in order */}
-            <div className="mt-4">
+            {/* <div className="mt-4">
                 <strong>Selected Options:</strong>
                 <ul>
                     {selectedOptions.map((selectedIndex, i) => (
                         <li key={i}>{i+1} -  {options[selectedIndex]}</li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 };

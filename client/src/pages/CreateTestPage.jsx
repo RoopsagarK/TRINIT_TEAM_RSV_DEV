@@ -18,6 +18,7 @@ import Toast from "../components/Toast";
 import { QuestionContext } from "../QuestionsContext";
 import { AnswerContext } from "../AnwersContext";
 import useAuth from "../hooks/useAuth";
+import { DurationContext } from "../context/useDuration";
 
 const OCR = "/upload";
 const OCR1 = "/upload1";
@@ -39,7 +40,8 @@ const CreateTestPage = () => {
   const { user } = useAuth();
   const { setQuestions } = useContext(QuestionContext);
   const { setAnswers } = useContext(AnswerContext);
-
+  const { durations, setDurations, percent, setPrecent, numberQ, setnumberQ } =
+    useContext(DurationContext);
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
 
@@ -66,6 +68,8 @@ const CreateTestPage = () => {
         duration: duration.current.value,
         type: type,
       });
+      setDurations(duration.current.value);
+      setPrecent(paspercent.current.value);
       console.log(response?.data?.data[0]);
       settestDetails(response?.data?.data[0]);
       setNextSilde(false);
@@ -114,10 +118,9 @@ const CreateTestPage = () => {
 
   const UploadHandler = async (ev) => {
     ev.preventDefault();
-
+    navigate("/assessment");
     const formData = new FormData();
     formData.append("pdfFile", file1);
-
 
     const formData1 = new FormData();
     formData1.append("pdfFile1", file2);
@@ -143,7 +146,6 @@ const CreateTestPage = () => {
       setAnswers(response1?.data?.data);
 
       setLoading(false);
-      navigate("/assessment");
 
       handleSubmit();
       console.log(response?.data?.data);
