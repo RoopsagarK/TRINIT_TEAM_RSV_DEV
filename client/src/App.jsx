@@ -10,6 +10,8 @@ import AssessmentPage from "./pages/AssessmentPage";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import AnswerProvider from './AnwersContext'; 
+import Dashboard from "./pages/Dashboard";
+
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +24,7 @@ function App() {
           <Route path="/custom" element={<Manual />} />
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
