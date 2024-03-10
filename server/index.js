@@ -171,6 +171,35 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.use("/testdetails", async (req, res) => {
+  console.log(req.body);
+  const { user_id, title, pass_percentage, duration, type } = req.body;
+  console.log(user_id, title, pass_percentage, duration, type);
+  const query = `
+    insert into assessments (user_id, title, pass_percentage, duration, type) values ($1, $2, $3, $4, $5)
+  `;
+
+  const query1 = `
+    select * from assessments where user_id = $1 and title=$2 and pass_percentage = $3 and duration = $4 and type = $5
+  `;
+
+  try {
+    await pool.query(query, [user_id, title, pass_percentage, duration, type]);
+
+    const testdetails = await pool.query(query1, [
+      user_id,
+      title,
+      pass_percentage,
+      duration,
+      type,
+    ]);
+    res.status(200).json({ data: testdetails.rows });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ data: error });
+  }
+});
+
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port 3000");
 });
