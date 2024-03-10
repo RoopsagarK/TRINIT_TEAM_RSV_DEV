@@ -26,7 +26,7 @@ export const Login = () => {
     ...theme.typography.body2,
     textAlign: "center",
   }));
-
+console.log(user);
   const SubmitHandler = async (event) => {
     event.preventDefault();
     console.log(Gmail.current.value, Passcode.current.value);
@@ -35,12 +35,17 @@ export const Login = () => {
       gmail: Gmail.current.value,
       passwords: Passcode.current.value,
     });
-
+    console.log(response?.data?.data[0]);
     if (response?.data?.status) {
       setUser({
+        user_id: response?.data?.data[0].id,
+        username: response?.data?.data[0].username,
         gmail: Gmail.current.value,
         password: Passcode.current.value,
       });
+      localStorage.setItem("username", response?.data?.data[0].username);
+      localStorage.setItem("email", response?.data?.data[0].email);
+      localStorage.setItem("user_id", response?.data?.data[0].id);
       navigate("/");
     } else {
       alert("Login Unsuccessfull!!");
