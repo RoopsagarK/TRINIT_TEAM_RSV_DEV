@@ -35,9 +35,8 @@ const CreateTestPage = () => {
   const [loading, setLoading] = useState(false);
   const duration = useRef();
   const navigate = useNavigate();
-  const [testDetails, settestDetails] = useState({})
+  const [testDetails, settestDetails] = useState({});
   const { user } = useAuth();
-
   const { setQuestions } = useContext(QuestionContext);
   const { setAnswers } = useContext(AnswerContext);
 
@@ -53,23 +52,24 @@ const CreateTestPage = () => {
       duration.current.value,
       type
     );
-    const response = await axios.post(TESTDETAILS, {
-      user_id: user.user_id,
-      title: title.current.value,
-      pass_percentage: paspercent.current.value,
-      duration: duration.current.value,
-      type: type,
-    });
-    console.log(response?.data?.data[0]); 
-    settestDetails(response?.data?.data[0]);
+
     if (
       title.current.value !== undefined &&
       paspercent.current.value !== undefined &&
       duration.current.value !== undefined &&
       type !== undefined
-    )
+    ) {
+      const response = await axios.post(TESTDETAILS, {
+        user_id: user.user_id,
+        title: title.current.value,
+        pass_percentage: paspercent.current.value,
+        duration: duration.current.value,
+        type: type,
+      });
+      console.log(response?.data?.data[0]);
+      settestDetails(response?.data?.data[0]);
       setNextSilde(false);
-    else setNextSilde(true);
+    } else setNextSilde(true);
   };
 
   const onBack = () => {
@@ -118,6 +118,7 @@ const CreateTestPage = () => {
     const formData = new FormData();
     formData.append("pdfFile", file1);
 
+
     const formData1 = new FormData();
     formData1.append("pdfFile1", file2);
 
@@ -147,7 +148,6 @@ const CreateTestPage = () => {
       handleSubmit();
       console.log(response?.data?.data);
       console.log(responses?.data?.data);
-      
     } catch (error) {
       console.log(error);
     }
