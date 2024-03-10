@@ -19,7 +19,7 @@ const AssessmentPage = () => {
   // if (questions.length === 0) {
   //   return <div>Loading...</div>;
   // }
-  const duration = durations;
+  const duration = 0.25;
   const Questions = [
     {
       question:

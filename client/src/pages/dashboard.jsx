@@ -3,11 +3,11 @@ import { DurationContext } from "../context/useDuration";
 import { useContext } from "react";
 
 const Dashboard = () => {
-  const percentage = 50;
+  const percentage = 60;
   return (
     <>
       <div className="h-screen bg-purple-200">
-        {percentage <= 50 ? (
+        {percentage <= 60 ? (
           <div className="flex flex-col items-center justify-center gap-1 p-4 display">
             <h1 className="text-2xl font-semibold">
               Congratualtions you passsed the exam 🥳
@@ -21,9 +21,13 @@ const Dashboard = () => {
             </p>
           </div>
         ) : (
-          <div>
-            <h1>Sorry you failed the exam 😔</h1>
-            <p>Your score is {percentage}%</p>
+          <div className="flex flex-col items-center justify-center gap-1 p-4 display">
+            <h1 className="text-2xl font-semibold">
+              Sorry you failed the exam 😔
+            </h1>
+            <p className="text-xl font-semibold underline">
+              Your score is {percentage}%
+            </p>
           </div>
         )}
         <div className="grid grid-cols-2 gap-4 mx-24">
@@ -45,7 +49,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="w-full mt-4 text-lg text-center">
-          Exam duration: 40 mins, Completed in: 37 mins
+          Exam duration: 15s, Completed in: 10s
         </div>
       </div>
     </>
